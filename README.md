@@ -1223,12 +1223,12 @@ python app.py
 | Issue | Contact |
 |-------|---------|
 | Server issues | Team Lead |
-| Database issues | Member 2 |
-| API issues | Member 3 |
-| QR issues | Member 4 |
-| Student issues | Member 5 |
-| Admin issues | Member 6 |
-| Testing issues | Member 7 |
+| Database issues | vatana |
+| API issues | reaska |
+| QR issues | jolie |
+| Student issues | lyhour |
+| Admin issues | heng |
+| Testing issues | vey |
 
 ---
 
