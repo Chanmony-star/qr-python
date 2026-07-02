@@ -235,7 +235,7 @@ Open browser and visit the local server address shown in the terminal.
 
 ## Team Tasks
 
-### Team Lead ([Your Name])
+### Team Lead ([Mony])
 **Files:** app.py, config.py, requirements.txt
 
 **Tasks:**
@@ -293,7 +293,7 @@ Open browser and visit the local server address shown in the terminal.
 
 ---
 
-### Lyhour (Frontend Developer)
+### Lyhour and Mony (Frontend Developer)
 **Files:** templates/*.html, static/style.css, student_interface.py
 
 **Tasks:**
