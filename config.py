@@ -4,8 +4,8 @@ import socket
 class Config:
     PORT = 5000
     HOST = '0.0.0.0'
-    ATTENDANCE_FILE = "attendance.json"
-    STUDENTS_FILE = "students.json"
+    ATTENDANCE_FILE = "data/attendance.json"
+    STUDENTS_FILE = "data/students.json"
     
     @staticmethod
     def get_ip():
