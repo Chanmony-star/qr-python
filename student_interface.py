@@ -1,35 +1,40 @@
 import requests
 
 def run_student_cli():
-    print("   STUDENT ATTENDANCE SYSTEM  ")
+    print("====================================")
+    print("   STUDENT ATTENDANCE SYSTEM (CLI)  ")
+    print("====================================")
     
-    # 1. Enters Student ID and Name
+    # 1. Ask student for input and trim accidental spaces
     user_id = input("Enter Student ID: ").strip()
     user_name = input("Enter Student Name: ").strip()
     
+    # Stop early if inputs are empty so the system doesn't crash
     if not user_id or not user_name:
         print("\n[Error] ID and Name cannot be empty!")
         return
 
-    # Base URL pointing to the Flask App server
+    # Server connection settings (Pointing to app.py)
     server_ip = "127.0.0.1"
     server_port = "5000"
     target_url = f"http://{server_ip}:{server_port}/mark/{user_id}/{user_name}"
     
     print(f"\n[Connecting] Submitting details to server...")
     
-    # Clear local network proxies to avoid connection blocks
+    # Clear system proxies to ensure smooth local communication
     bypass_proxies = {"http": None, "https": None}
     
     try:
-        # 2. Clicks "Submit" / Sends data 
+        # Send data to the main Flask app
         response = requests.get(target_url, proxies=bypass_proxies)
         
-        # 3. Success page with details returned from system 
+        print("\n==============================")
         print(f"Status Code: {response.status_code}")
         print(f"Server Response: {response.text}")
+        print("==============================")
         
     except requests.exceptions.ConnectionError:
+        # This safety block only triggers if the main app.py server is turned off
         print("\n[NETWORK ERROR] Could not connect to the Attendance Server.")
 
 if __name__ == "__main__":
