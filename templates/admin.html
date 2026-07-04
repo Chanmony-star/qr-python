@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --ink:      #24302B;
+    --paper:    #FBF8F1;
+    --card:     #FFFFFF;
+    --hairline: #E1DCCB;
+    --muted:    #7A7566;
+    --green:    #2F6E52;
+    --green-bg: #E7F2EA;
+    --coral:    #C1502E;
+    --coral-bg: #FBEAE3;
+    --accent:   #2A5C8A;
+    --accent-bg:#E7F0F8;
+  }
+
+  .admin-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+    color: var(--ink);
+  }
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .admin-header .subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+
+  .date-pill {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    color: var(--ink);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .stat-card.present .stat-value { color: var(--green); }
+  .stat-card.absent  .stat-value { color: var(--coral); }
+  .stat-card.rate    .stat-value { color: var(--accent); }
+
+  .rate-track {
+    margin-top: 0.5rem;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--hairline);
+    overflow: hidden;
+  }
+  .rate-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--paper);
+    padding: 0.6rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .search-box {
+    flex: 1 1 220px;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 0.55rem 0.9rem 0.55rem 2.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--hairline);
+    background: var(--card);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .search-box::before {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    transform: translateY(-50%);
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  .admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid var(--hairline);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .admin-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .admin-btn.danger  { color: var(--coral); }
+  .admin-btn:hover   { border-color: var(--accent); }
+
+  .admin-table-wrap {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-meta {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  table.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  table.admin-table th, table.admin-table td {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  table.admin-table th {
+    background: #F6F3EA;
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  table.admin-table th .arrow { opacity: 0.35; margin-left: 3px; }
+  table.admin-table th.sorted .arrow { opacity: 1; }
+
+  table.admin-table tr:last-child td { border-bottom: none; }
+  table.admin-table tr:hover td { background: #FAF8F2; }
+
+  .id-cell { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .time-cell { font-variant-numeric: tabular-nums; }
+
+  .status-pill {
+    display: inline-block;
+    background: var(--green-bg);
+    color: var(--green);
+    padding: 0.15rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .empty-state, .no-results {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--muted);
+  }
+  .no-results { display: none; }
+
+  @media (max-width: 640px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .toolbar-actions { width: 100%; }
+    .toolbar-actions .admin-btn { flex: 1 1 auto; justify-content: center; }
+
+    table.admin-table thead { display: none; }
+    table.admin-table, table.admin-table tbody, table.admin-table tr, table.admin-table td {
+      display: block;
+      width: 100%;
+    }
+    table.admin-table tr {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+    table.admin-table td {
+      border: none;
+      padding: 0.15rem 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    table.admin-table td::before {
+      content: attr(data-label);
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+    }
+  }
+</style>
+
+<div class="admin-wrap">
+  <div class="admin-header">
+    <div>
+      <h1>Admin dashboard</h1>
+      <div class="subtitle">{{ total_students }} students enrolled</div>
+    </div>
+    <span class="date-pill">{{ date }}</span>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card present">
+      <div class="stat-value">{{ total_present }}</div>
+      <div class="stat-label">Present today</div>
+    </div>
+    <div class="stat-card absent">
+      <div class="stat-value">{{ total_students - total_present }}</div>
+      <div class="stat-label">Absent</div>
+    </div>
+    <div class="stat-card total">
+      <div class="stat-value">{{ total_students }}</div>
+      <div class="stat-label">Total students</div>
+    </div>
+    <div class="stat-card rate">
+      {% set rate = ((total_present / total_students * 100) if total_students else 0) | round(1) %}
+      <div class="stat-value">{{ rate }}%</div>
+      <div class="stat-label">Attendance rate</div>
+      <div class="rate-track"><div class="rate-fill" style="width: {{ rate }}%;"></div></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search by name or student ID..." autocomplete="off">
+    </div>
+    <div class="toolbar-actions">
+      <a class="admin-btn" href="{{ url_for('admin') }}">Refresh</a>
+      <a class="admin-btn" href="{{ url_for('export_csv') }}">Export CSV</a>
+      <a class="admin-btn" href="{{ url_for('export_json') }}">Export JSON</a>
+      <a class="admin-btn" href="{{ url_for('students_list') }}">Students</a>
+      <a class="admin-btn danger" href="{{ url_for('admin_logout') }}">Log out</a>
+    </div>
+  </div>
+
+  <div class="admin-table-wrap">
+    {% if attendance %}
+    <div class="table-meta"><span id="rowCount">{{ attendance|length }}</span> record(s) shown &middot; click a column header to sort</div>
+    <table class="admin-table" id="attendanceTable">
+      <thead>
+        <tr>
+          <th data-key="id">Student ID <span class="arrow">&#9650;</span></th>
+          <th data-key="name">Name <span class="arrow">&#9650;</span></th>
+          <th data-key="date">Date <span class="arrow">&#9650;</span></th>
+          <th data-key="time">Time <span class="arrow">&#9650;</span></th>
+          <th data-key="status">Status <span class="arrow">&#9650;</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student_id, record in attendance.items() %}
+        <tr data-search="{{ (student_id ~ ' ' ~ record.name) | lower }}">
+          <td data-label="Student ID" class="id-cell">{{ student_id }}</td>
+          <td data-label="Name">{{ record.name }}</td>
+          <td data-label="Date">{{ record.date }}</td>
+          <td data-label="Time" class="time-cell">{{ record.time }}</td>
+          <td data-label="Status"><span class="status-pill">Present</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="no-results" id="noResults">No students match your search.</div>
+    {% else %}
+    <div class="empty-state">No attendance records yet. Once a student scans in, they'll show up here.</div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function () {
+  var table = document.getElementById('attendanceTable');
+  if (!table) return;
+
+  var searchInput = document.getElementById('searchInput');
+  var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+  var rowCountEl = document.getElementById('rowCount');
+  var noResults = document.getElementById('noResults');
+
+  function applyFilter() {
+    var q = searchInput.value.trim().toLowerCase();
+    var visible = 0;
+    rows.forEach(function (row) {
+      var match = row.getAttribute('data-search').indexOf(q) !== -1;
+      row.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    rowCountEl.textContent = visible;
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+    table.style.display = visible === 0 ? 'none' : '';
+  }
+
+  searchInput.addEventListener('input', applyFilter);
+
+  var sortState = { key: null, dir: 1 };
+  table.querySelectorAll('th[data-key]').forEach(function (th, index) {
+    th.addEventListener('click', function () {
+      var key = th.getAttribute('data-key');
+      sortState.dir = (sortState.key === key) ? -sortState.dir : 1;
+      sortState.key = key;
+
+      table.querySelectorAll('th').forEach(function (h) { h.classList.remove('sorted'); });
+      th.classList.add('sorted');
+      th.querySelector('.arrow').innerHTML = sortState.dir === 1 ? '&#9650;' : '&#9660;';
+
+      var tbody = table.querySelector('tbody');
+      var sorted = rows.slice().sort(function (a, b) {
+        var av = a.children[index].textContent.trim().toLowerCase();
+        var bv = b.children[index].textContent.trim().toLowerCase();
+        if (av < bv) return -1 * sortState.dir;
+        if (av > bv) return 1 * sortState.dir;
+        return 0;
+      });
+      sorted.forEach(function (row) { tbody.appendChild(row); });
+    });
+  });
+})();
+</script>
+{% endblock %}
