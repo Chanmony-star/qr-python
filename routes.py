@@ -49,6 +49,7 @@ def setup_routes(app):
     def export_csv():
         import csv
         import io
+        # pyrefly: ignore [missing-import]
         from flask import Response
 
         attendance = db.get_today_attendance()
