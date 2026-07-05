@@ -68,9 +68,9 @@ class Database:
         data = self.get_today_attendance()
         
         if not data:
-            return "📊 No attendance recorded today"
+            return " No attendance recorded today"
         
-        output = f"📊 ATTENDANCE REPORT - {today}\n"
+        output = f" ATTENDANCE REPORT - {today}\n"
         output += "="*40 + "\n\n"
         
         for sid, info in data.items():

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+<style>
+  .login-wrap {
+    max-width: 380px; margin: 4rem auto; padding: 2rem;
+    background: #fff; border: 1px solid var(--hairline, #e2e8f0);
+    border-radius: 12px; text-align: center;
+  }
+  .login-wrap h1 { font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .login-wrap p { color: #666; font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .login-wrap input {
+    width: 100%; padding: 0.65rem; border: 1px solid #ddd;
+    border-radius: 8px; font-size: 1rem; margin-bottom: 1rem;
+    box-sizing: border-box;
+  }
+  .login-wrap input:focus { outline: none; border-color: #2A5C8A; }
+  .login-wrap button {
+    width: 100%; padding: 0.65rem; background: #2A5C8A; color: #fff;
+    border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
+    font-weight: 600;
+  }
+  .login-wrap button:hover { background: #1e4a6e; }
+  .error { color: #c00; margin: 0.5rem 0; font-size: 0.85rem; }
+</style>
+<div class="login-wrap">
+  <h1>Admin Login</h1>
+  <p>Enter password to access the dashboard</p>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <form method="POST">
+    <input type="password" name="password" placeholder="Admin password" required>
+    <button type="submit">Login</button>
+  </form>
+</div>
+{% endblock %}

@@ -7,6 +7,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 setup_routes(app)
 
+# Initialize network prefix check
+Config.get_ip()
+
 if __name__ == '__main__':
     ip = Config.get_ip()
     print(f"\n Server running at http://{ip}:5000")

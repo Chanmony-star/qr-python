@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}QR Display{% endblock %}
+{% block content %}
+<style>
+  .qr-wrap { max-width: 500px; margin: 0 auto; padding: 2rem 1rem; text-align: center; }
+  .qr-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 2.5rem 2rem; margin-top: 1.5rem;
+  }
+  .qr-card img { max-width: 280px; image-rendering: pixelated; }
+  .qr-card .title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .qr-card .sub { color: #666; font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .refresh-badge {
+    display: inline-block; background: #E7F2EA; color: #2F6E52;
+    padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+    margin-top: 1rem;
+  }
+  .countdown { color: #666; font-size: 0.85rem; margin-top: 0.3rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;
+    font-size: 0.85rem; font-weight: 600;
+    border: 1px solid #e2e8f0; background: #fff; color: #24302B; cursor: pointer;
+  }
+  .btn:hover { border-color: #2A5C8A; }
+</style>
+
+<div class="qr-wrap">
+  <h1>Class QR Code</h1>
+  <p style="color:#666;margin-bottom:0.5rem">Show this for students to scan</p>
+
+  <div class="toolbar" style="margin-bottom:0.5rem">
+    <a class="btn" href="{{ url_for('admin') }}">← Dashboard</a>
+  </div>
+
+  <div class="qr-card">
+    <div class="title">Attendance QR</div>
+    <div class="sub">Scan to access the attendance form</div>
+    <img src="{{ url_for('qr_image') }}?t={{ '%d' | format(timestamp) }}" alt="Class QR Code" id="qrImg">
+    <div class="refresh-badge">Auto-refresh every 15s</div>
+    <div class="countdown" id="countdown"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var img = document.getElementById('qrImg');
+  if (!img) return;
+
+  var countdownEl = document.getElementById('countdown');
+  var seconds = 15;
+
+  function tick() {
+    seconds--;
+    if (countdownEl) countdownEl.textContent = 'Next refresh in ' + seconds + 's';
+    if (seconds <= 0) {
+      img.src = '{{ url_for("qr_image") }}?t=' + new Date().getTime();
+      seconds = 15;
+    }
+  }
+
+  setInterval(tick, 1000);
+})();
+</script>
+{% endblock %}
