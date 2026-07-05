@@ -38,7 +38,8 @@ def setup_routes(app):
             'admin.html',
             attendance=attendance,
             total_students=total_students,
-            present_count=present_count
+            present_count=present_count,
+            total_present=present_count
         )
     
     @app.route('/qr')

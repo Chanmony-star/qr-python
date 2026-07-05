@@ -16,3 +16,8 @@ venv/
 .venv/
 *.log
 .DS_Store
+
+# Claude AI flow files
+.claude-flow/
+.claude/
+

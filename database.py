@@ -74,7 +74,7 @@ class Database:
         output += "="*40 + "\n\n"
         
         for sid, info in data.items():
-            output += f"✅ {sid}: {info['name']} at {info['time']}\n"
+            output += f" {sid}: {info['name']} at {info['time']}\n"
         
         output += f"\nTotal: {len(data)} students present"
         return output
