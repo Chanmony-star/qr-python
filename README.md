@@ -1,22 +1,22 @@
-# 📚 QR Attendance System
+# QR Attendance System
 
 A **Flask-based** QR code attendance system for classrooms. Students scan a QR code displayed by the teacher, enter their ID and name, and get marked present — all over the school WiFi network. No app installation required.
 
 ---
 
-## ❓ Problem Statement
+## Problem Statement
 
-Traditional paper-based attendance is slow, easy to cheat, and hard to track over time. Teachers waste 5–10 minutes per class calling names or passing a sign‑in sheet. Data is scattered across notebooks and never analyzed.
+Traditional paper-based attendance is slow, easy to cheat, and hard to track over time. Teachers waste 5-10 minutes per class calling names or passing a sign-in sheet. Data is scattered across notebooks and never analyzed.
 
 **This system solves it by:**
-- Reducing roll‑call to a 3‑second QR scan
+- Reducing roll-call to a 3-second QR scan
 - Logging date, time, and status automatically
 - Restricting access to the school network so students can't mark from home
 - Giving the teacher a live dashboard with exportable reports
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Details |
 |---------|---------|
@@ -25,13 +25,13 @@ Traditional paper-based attendance is slow, easy to cheat, and hard to track ove
 | **Admin dashboard** | Live count of present/absent/total with percentage |
 | **Network lock** | Only devices on school WiFi can mark attendance |
 | **CSV / JSON export** | Download attendance data and student lists |
-| **Auto‑refresh QR** | QR page refreshes every 15 seconds to prevent reuse |
+| **Auto-refresh QR** | QR page refreshes every 15 seconds to prevent reuse |
 | **Admin login** | Simple password gate for all admin pages |
 | **No app install** | Works entirely in the phone browser |
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -40,11 +40,11 @@ Traditional paper-based attendance is slow, easy to cheat, and hard to track ove
 | Storage | JSON files (`data/`) |
 | QR generation | `qrcode` + `Pillow` |
 | Frontend | Vanilla CSS + responsive layout |
-| Network | Flask built‑in server, bound to `0.0.0.0` |
+| Network | Flask built-in server, bound to `0.0.0.0` |
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 - Python 3.10+
@@ -84,7 +84,7 @@ Server running at http://<your-ip>:5000
 
 ---
 
-## 👥 Team Members
+## Team Members
 
 | Role | Member | Files | Responsibilities |
 |------|--------|-------|------------------|
@@ -98,7 +98,7 @@ Server running at http://<your-ip>:5000
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 (Add screenshots here after deployment)
 
@@ -112,7 +112,7 @@ Server running at http://<your-ip>:5000
 
 ---
 
-## 🏗 Project Structure
+## Project Structure
 
 ```
 qr-python/
@@ -148,30 +148,15 @@ qr-python/
 
 ---
 
-## 🌐 How It Works (End to End)
+## How It Works (End to End)
 
 ```
-┌──────────┐     scans      ┌──────────────┐     POST /mark    ┌──────────┐
-│  Student  │ ──────────→    │  QR Code     │ ──────────────→   │  Flask   │
-│  Phone    │   /mark URL    │  (projected) │   (ID + Name)     │  Server  │
-└──────────┘                └──────────────┘                   └────┬─────┘
-                                                                    │
-                                                                    ↓
-                                                             ┌──────────┐
-                                                             │  JSON    │
-                                                             │  File    │
-                                                             └──────────┘
-                                                                    │
-                                                                    ↓
-┌──────────┐     /admin       ┌──────────────┐     reads    ┌──────────┐
-│ Teacher   │ ──────────→    │  Dashboard   │ ←──────────── │  Live    │
-│           │                │  + Export    │               │  Data    │
-└──────────┘                └──────────────┘               └──────────┘
+Student Phone -- scans QR --> QR Code -- POST /mark (ID+Name) --> Flask Server --> JSON File --> Dashboard + Export
 ```
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - [ ] **Database upgrade** — migrate from JSON to SQLite for concurrent writes
 - [ ] **Student registration portal** — let students register their own accounts
@@ -179,7 +164,7 @@ qr-python/
 - [ ] **Export to PDF** — generate printable class reports
 - [ ] **QR watermarking** — add timestamp overlays to prevent screenshot reuse
 - [ ] **Multiple classes** — support different sections/subjects per teacher
-- [ ] **Parent notifications** — auto‑email/SMS when student is absent
+- [ ] **Parent notifications** — auto-email/SMS when student is absent
 - [ ] **Deploy to cloud** — host on a Raspberry Pi or campus server instead of a laptop
 
 ---
