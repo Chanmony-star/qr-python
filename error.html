@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="ui-card">
+    <div class="big-icon error-color">✕</div>
+    <h2>Submission Failure</h2>
+    <p style="color: #64748b;">{{ message if message else 'Invalid student record sequence.' }}</p>
+    
+    <br>
+    <a href="javascript:history.back()" class="primary-btn" style="text-decoration: none;">Try Re-entering Details</a>
+</div>
+{% endblock %}

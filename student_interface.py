@@ -1,23 +1,41 @@
 import requests
-def run_student_interface():
-    print("=== STUDENT ATTENDANCE SIMULATOR ===")
-    student_id = input("Enter Student ID: ")
-    student_name = input("Enter Student Name: ")
-    #  Set the address of the server
+
+def run_student_cli():
+    print("====================================")
+    print("   STUDENT ATTENDANCE SYSTEM (CLI)  ")
+    print("====================================")
+    
+    # 1. Ask student for input and trim accidental spaces
+    user_id = input("Enter Student ID: ").strip()
+    user_name = input("Enter Student Name: ").strip()
+    
+    # Stop early if inputs are empty so the system doesn't crash
+    if not user_id or not user_name:
+        print("\n[Error] ID and Name cannot be empty!")
+        return
+
+    # Server connection settings (Pointing to app.py)
     server_ip = "127.0.0.1"
-    port = "5000"
-    # Glue everything together to make the website link (URL)
-    url = f"http://{server_ip}:{port}/mark/{student_id}/{student_name}"
-    print("\nConnecting to the server...")
-    print(f"Sending data to: {url}")
-    # Send the information over the network
-    # We use 'proxies=None' to make sure your computer firewall doesn't block it
-    response = requests.get(url, proxies={"http": None, "https": None})
-    # Show the results from the server
-    print("\n--- SERVER RESPONSE ---")
-    print(f"Status Code: {response.status_code}")
-    print(f"Server Message: {response.text}")
-    print("-----------------------")
-# This line tells Python to start the code above
+    server_port = "5000"
+    target_url = f"http://{server_ip}:{server_port}/mark/{user_id}/{user_name}"
+    
+    print(f"\n[Connecting] Submitting details to server...")
+    
+    # Clear system proxies to ensure smooth local communication
+    bypass_proxies = {"http": None, "https": None}
+    
+    try:
+        # Send data to the main Flask app
+        response = requests.get(target_url, proxies=bypass_proxies)
+        
+        print("\n==============================")
+        print(f"Status Code: {response.status_code}")
+        print(f"Server Response: {response.text}")
+        print("==============================")
+        
+    except requests.exceptions.ConnectionError:
+        # This safety block only triggers if the main app.py server is turned off
+        print("\n[NETWORK ERROR] Could not connect to the Attendance Server.")
+
 if __name__ == "__main__":
-    run_student_interface()
+    run_student_cli()
