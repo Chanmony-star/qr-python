@@ -1,6 +1,6 @@
 # routes.py
 import io
-from datetime import date, datetime
+from datetime import date
 from flask import render_template, request, session, redirect, url_for, Response, jsonify
 from database import Database
 from config import Config
