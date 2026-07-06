@@ -94,8 +94,8 @@ def setup_routes(app):
     def qr():
         return render_template('qr.html')
 
-    @login_required
     @app.route('/admin/qr')
+    @login_required
     def admin_qr():
         from time import time
         return render_template('admin_qr.html', timestamp=int(time()))
@@ -110,8 +110,8 @@ def setup_routes(app):
         buf.seek(0)
         return Response(buf.getvalue(), mimetype='image/png')
     
-    @login_required
     @app.route('/export/csv')
+    @login_required
     def export_csv():
         import csv
         import io
@@ -133,15 +133,15 @@ def setup_routes(app):
             headers={'Content-Disposition': 'attachment; filename=attendance.csv'}
         )
 
-    @login_required
     @app.route('/export/json')
+    @login_required
     def export_json():
         from flask import jsonify
         attendance = db.get_today_attendance()
         return jsonify(attendance)
 
-    @login_required
     @app.route('/export/students/csv')
+    @login_required
     def export_students_csv():
         import csv, io
         from flask import Response
