@@ -14,12 +14,10 @@ def run_student_cli():
         print("\n[Error] ID and Name cannot be empty!")
         return
 
-    # Server connection settings
-    # Change SERVER_IP to your laptop's school-WiFi IP (same one shown at startup)
-    # so the CLI works from another computer on the same network
-    SERVER_IP = "127.0.0.1"   # ← change to your school WiFi IP (e.g. "192.168.1.5")
-    SERVER_PORT = "5000"
-    target_url = f"http://{SERVER_IP}:{SERVER_PORT}/mark/{user_id}/{user_name}"
+    # Server connection settings (Pointing to app.py)
+    server_ip = "127.0.0.1"
+    server_port = "5000"
+    target_url = f"http://{server_ip}:{server_port}/mark/{user_id}/{user_name}"
     
     print(f"\n[Connecting] Submitting details to server...")
     
