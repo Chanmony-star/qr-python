@@ -16,21 +16,28 @@ class Config:
     # Only devices whose IP starts with this prefix can mark attendance.
     # Leave None to DISABLE network restriction (allow from any network).
     #
-    # >>> Find your school's prefix <<<
+    # >>> How to find your subnet <<<
     #   1. On your laptop (connected to school WiFi), run:  hostname -I
     #   2. Take the first 3 octets + dot, e.g.  192.168.1.
     #   3. Put it below
-    SCHOOL_SUBNET = None   # ← put your school subnet here, e.g. "192.168.1."
+    #
+    # │ NOTE: If you leave SCHOOL_SUBNET = None, the server will try to    │
+    # │ detect it automatically from your WiFi IP at startup.              │
+    # │ Set it manually to override the auto-detect.                       │
+    SCHOOL_SUBNET = None   # ← override with your subnet, e.g. "192.168.1."
 
     @staticmethod
     def get_ip():
-        """Get this server's LAN IP (for the startup banner)."""
+        """Get this server's LAN IP and auto-set SCHOOL_SUBNET if not configured."""
         import subprocess
         try:
             result = subprocess.run(['hostname', '-I'], capture_output=True, text=True)
             ips = result.stdout.strip().split()
             for ip in ips:
                 if ip.startswith('10.') or ip.startswith('192.168.'):
+                    # Auto-populate subnet from the first matching IP
+                    if Config.SCHOOL_SUBNET is None:
+                        Config.SCHOOL_SUBNET = ip[:ip.rfind('.') + 1]
                     return ip
         except:
             pass
