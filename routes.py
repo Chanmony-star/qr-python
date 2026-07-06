@@ -36,7 +36,7 @@ def setup_routes(app):
     @app.route('/mark', methods=['GET', 'POST'])
     def mark():
         client_ip = request.remote_addr or ""
-        if not client_ip.startswith(Config.SCHOOL_PREFIX):
+        if Config.SCHOOL_SUBNET and not client_ip.startswith(Config.SCHOOL_SUBNET):
             return render_template('error.html', message="Access denied — must use school WiFi")
 
         if request.method == 'POST':
@@ -55,7 +55,7 @@ def setup_routes(app):
     @app.route('/mark/<student_id>/<student_name>')
     def mark_student(student_id, student_name):
         client_ip = request.remote_addr or ""
-        if not client_ip.startswith(Config.SCHOOL_PREFIX):
+        if Config.SCHOOL_SUBNET and not client_ip.startswith(Config.SCHOOL_SUBNET):
             return render_template('error.html', message="Access denied — must use school WiFi")
         success, message = db.mark_attendance(student_id, student_name)
         if success:
