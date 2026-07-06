@@ -1,28 +1,3 @@
-"""
-admin_interface.py
--------------------
-Admin Interface Developer: Heng
-
-Responsibilities covered here:
-    - Admin CLI interface (run this file directly)
-    - Statistics computation (present / total / rate)
-    - CSV + JSON export (also imported by routes.py for /export/csv and /export/json)
-    - Attendance report generation
-
-NOTE ON DATA FORMAT (important for the team):
-    app.py (Mony) reads/writes attendance.json as a FLAT dict:
-        { student_id: {"name": ..., "date": "YYYY-MM-DD", "time": "HH:MM:SS"} }
-
-    database.py (Vatana) instead nests it by date:
-        { "YYYY-MM-DD": { student_id: {"name":..., "time":..., "status":...} } }
-
-    Since app.py is what the Flask server actually runs against, this file
-    (and the /export routes) work with the FLAT format so admin data matches
-    what students actually see when they mark attendance. If we want to switch
-    to Vatana's nested format everywhere, app.py needs to change too -- flag
-    this with the team before final integration.
-"""
-
 import json
 import os
 import csv
@@ -36,10 +11,6 @@ STUDENTS_FILE = Config.STUDENTS_FILE
 EXPORT_DIR = "exports"
 
 
-# ---------------------------------------------------------------------------
-# Shared data helpers (same contract as app.py's load_json/save_json)
-# ---------------------------------------------------------------------------
-
 def load_json(path):
     if not os.path.exists(path):
         return {}
@@ -52,9 +23,6 @@ def save_json(path, data):
         json.dump(data, f, indent=4)
 
 
-# ---------------------------------------------------------------------------
-# Statistics
-# ---------------------------------------------------------------------------
 
 def get_today_attendance(attendance=None, today=None):
     """Return only today's records from the flat attendance dict."""
@@ -88,9 +56,6 @@ def get_stats():
     }
 
 
-# ---------------------------------------------------------------------------
-# Export functions (importable by routes.py for /export/csv, /export/json)
-# ---------------------------------------------------------------------------
 
 def export_csv_string():
     """Build CSV content in-memory (handy for Flask Response without touching disk)."""
@@ -126,11 +91,6 @@ def export_json_file(filename=None):
         f.write(export_json_string())
     return path
 
-
-# ---------------------------------------------------------------------------
-# Report generation
-# ---------------------------------------------------------------------------
-
 def generate_report():
     stats = get_stats()
     lines = []
@@ -152,10 +112,6 @@ def generate_report():
     lines.append("=" * 44)
     return "\n".join(lines)
 
-
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
 
 def print_menu():
     print("\n" + "=" * 40)

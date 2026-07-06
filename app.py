@@ -7,7 +7,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 setup_routes(app)
 
-# Auto-detect subnet from network (sets Config.SCHOOL_SUBNET if not manually configured)
 Config.get_ip()
 
 if __name__ == '__main__':
